@@ -1,5 +1,6 @@
 package com.company;
 
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Student {
@@ -8,7 +9,7 @@ public class Student {
     private int year;
     private String studentId;
     private String courses = "";
-    private int tuitionBalance = 0;
+    private double tuitionBalance = 0;
     private static int costOfCourse = 600;
     private static int id = 1000;
 
@@ -21,16 +22,23 @@ public class Student {
         System.out.print("Enter student last name: ");
         this.lastName = in.nextLine();
 
-        System.out.print("1 - Freshmen" +
-                "\n2 - Sophomore" +
-                "\n3 - Junior" +
-                "\n4 - Senior" +
-                "\nEnter student class level: ");
-        this.year = in.nextInt();
+
+        do {
+            System.out.print("1 - Freshmen" +
+                    "\n2 - Sophomore" +
+                    "\n3 - Junior" +
+                    "\n4 - Senior" +
+                    "\n5 - Super Senior" +
+                    "\nEnter student class level: ");
+            while (!in.hasNextInt()) {
+                in.next();
+            }
+            System.out.println("That is not a listed year");
+            this.year = in.nextInt();
+        } while (this.year < 1  || this.year > 5);
+        System.out.println("Thank you! Got " + this.year);
 
         setStudentId();
-
-        System.out.println(firstName + " " + lastName + " " + year + " " + studentId);
 
     }
 
@@ -51,20 +59,38 @@ public class Student {
             Scanner in = new Scanner(System.in);
             String course = in.nextLine().toUpperCase();
             if (!course.equals("Q")) {
-                courses = courses + "\n" + course;
+                courses = courses + "\n  " + course;
                 tuitionBalance = tuitionBalance + costOfCourse;
             } else {
                 break;
             }
-        } while (1!=0);
-        System.out.println("Enrolled in: " + courses);
-        System.out.println("Tuition Balance: " + tuitionBalance);
+        } while (1 != 0);
     }
 
     //View Balance
+    private void viewBalance() {
+        System.out.println("Your balance is: $" + tuitionBalance);
+    }
 
     //Pay tuition
+    public void payTuition() {
+        viewBalance();
+        System.out.println("Enter your payment: $");
+        Scanner in = new Scanner(System.in);
+        double payment = Math.round(in.nextDouble() * 100 / 100);
+        tuitionBalance = tuitionBalance - payment;
+        System.out.println("Thank you for your payment of " + payment);
+        viewBalance();
+    }
 
     //Show status
+    public String showInfo() {
+        return "Name: " + firstName + " " + lastName +
+                "\nYear: " + year +
+                "\nStudent ID: " + studentId +
+                "\nCourses Enrolled: " + courses +
+                "\nBalance: $" + tuitionBalance;
+
+    }
 
 }
